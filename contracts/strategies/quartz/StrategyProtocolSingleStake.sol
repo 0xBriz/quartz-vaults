@@ -71,7 +71,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
 
     event BuyBackAndBurn(uint256 indexed amount);
 
-    // ===== GENERAL EVENTS ===== //
+    // ============== EVENTS =============== //
 
     event StratHarvest(
         address indexed harvester,
