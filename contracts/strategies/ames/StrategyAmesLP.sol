@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity ^0.6.0;
+pragma solidity 0.6.12; 
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -9,11 +8,11 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../interfaces/common/IUniswapRouterETH.sol";
 import "../../interfaces/common/IUniswapV2Pair.sol";
 import "../../interfaces/common/IMasterChef.sol";
-import "../common/StratManager.sol";
-import "../common/FeeManager.sol";
+import "../managers/StratManager.sol";
+import "../managers/FeeManager.sol";
 import "../../utils/StringUtils.sol";
 
-contract StrategyQuartzLP is StratManager, FeeManager {
+contract StrategyAmesLP is StratManager, FeeManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -199,8 +198,8 @@ contract StrategyQuartzLP is StratManager, FeeManager {
         uint256 protocolFeeAmount = nativeBal.mul(protocolFee).div(MAX_FEE);
         IERC20(native).safeTransfer(protocolFeeRecipient, protocolFeeAmount);
 
-        uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
-        IERC20(native).safeTransfer(strategist, strategistFee);
+        uint256 stratFee = nativeBal.mul(strategistFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(strategist, stratFee);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.

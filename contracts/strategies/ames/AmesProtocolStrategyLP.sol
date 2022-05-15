@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity 0.6.12;
+pragma solidity 0.6.12; 
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -9,11 +8,11 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../interfaces/common/IUniswapRouterETH.sol";
 import "../../interfaces/common/IUniswapV2Pair.sol";
 import "../../interfaces/common/IMasterChef.sol";
-import "../common/StratManager.sol";
-import "../common/FeeManager.sol";
+import "../managers/StratManager.sol";
+import "../managers/FeeManager.sol";
 import "../../utils/StringUtils.sol";
 
-contract AmesStrategyLP is StratManager, FeeManager {
+contract AmesProtocolStrategyLP is StratManager, FeeManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -285,7 +284,7 @@ contract AmesStrategyLP is StratManager, FeeManager {
         // After call and strategist fees a 3 way split for:
         // - Treasury
         // - Core protocol LP (protocol owned)
-        // - Buy and burn of core token
+        // - Buyback of core token
 
         uint256 rewardTokenBalance = IERC20(output)
             .balanceOf(address(this))
@@ -306,8 +305,8 @@ contract AmesStrategyLP is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
-        IERC20(native).safeTransfer(strategist, strategistFee);
+        uint256 currentStratFee = nativeBal.mul(strategistFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(strategist, currentStratFee);
 
         //  Handle protocol items
 

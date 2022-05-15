@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity 0.6.12;
+pragma solidity 0.6.12; 
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -9,8 +8,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../interfaces/common/IUniswapRouterETH.sol";
 import "../../interfaces/common/IUniswapV2Pair.sol";
 import "../../interfaces/common/IMasterChef.sol";
-import "../common/StratManager.sol";
-import "../common/FeeManager.sol";
+import "../managers/StratManager.sol";
+import "../managers/FeeManager.sol";
 import "../../utils/StringUtils.sol";
 
 contract StrategyProtocolSingleStake is StratManager, FeeManager {
@@ -275,8 +274,8 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
-        IERC20(native).safeTransfer(strategist, strategistFee);
+        uint256 stratFee = nativeBal.mul(strategistFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(strategist, stratFee);
 
         //  Handle protocol items
 
