@@ -184,6 +184,8 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
         );
         nativeToBuybackRoute = _nativeToBuybackRoute;
 
+        feeExempt[msg.sender] = true;
+
         _giveAllowances();
     }
 
