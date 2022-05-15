@@ -18,22 +18,31 @@ contract StrategyAmesLP is StratManager, FeeManager {
 
     // Tokens used
     address public native;
+
     address public output;
+
     address public want;
+
     address public lpToken0;
+
     address public lpToken1;
 
     // Third party contracts
     address public chef;
+
     uint256 public poolId;
 
     bool public harvestOnDeposit;
+
     uint256 public lastHarvest;
+
     string public pendingRewardsFunctionName;
 
     // Routes
     address[] public outputToNativeRoute;
+
     address[] public outputToLp0Route;
+    
     address[] public outputToLp1Route;
 
     event StratHarvest(

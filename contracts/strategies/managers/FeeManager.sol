@@ -24,13 +24,15 @@ abstract contract FeeManager is StratManager {
     uint256 public constant PROTOCOL_WITHDRAWAL_FEE_CAP = 100;
 
     // Reward for person who creates and deploys the strategy
-    uint256 public strategistFee = 224;
+    uint256 public strategistFee = 300;
 
     // Reward for person calling harvest
-    uint256 public callFee = 111;
+    uint256 public callFee = 200;
 
     // For setups that provide a burn mechanism in the strategy
     uint256 public buyBackFee = 20;
+
+    bool public burnEnabled = false;
 
     // Used to add to Protocol Owned Liquidity.
     // 1% default
@@ -41,6 +43,8 @@ abstract contract FeeManager is StratManager {
 
     // Portion of performance fee that goes to the protocol
     uint256 public protocolFee = MAX_FEE - strategistFee - callFee;
+
+    mapping(address => bool) public feeExempt;
 
     // Events to emit when fees are updated to provide transparency for to users
     event WithdrawFeeUpdate(
@@ -74,7 +78,7 @@ abstract contract FeeManager is StratManager {
         emit CallFeeUpdate(previousFee, _fee, protocolFee);
     }
 
-      /// @dev updates the callFee and also the protocolFee as a result
+    /// @dev updates the callFee and also the protocolFee as a result
     function setStrategistFee(uint256 _fee) public onlyOwner {
         require(_fee <= MAX_STRATEGIST_FEE, "!Strat fee cap");
 
@@ -112,5 +116,17 @@ abstract contract FeeManager is StratManager {
         buyBackFee = _fee;
 
         emit BuyBackFeeUpdate(previousFee, _fee);
+    }
+
+    function setFeeExempt(address _user, bool _exempt) external onlyOwner {
+        require(feeExempt[_user] != _exempt, "Value not changed");
+
+        feeExempt[_user] = _exempt;
+    }
+
+      function setBurnEnabled(bool _enabled) external onlyOwner {
+        require(burnEnabled != _enabled, "Value not changed");
+
+        burnEnabled = _enabled;
     }
 }

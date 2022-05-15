@@ -71,7 +71,7 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
 
     event TreasuryFeeTransfer(uint256 indexed amount);
 
-    event BuyBackAndBurn(uint256 indexed amount);
+    event BuyBack(address indexed token, uint256 indexed amount);
 
     // ===== GENERAL EVENTS ===== //
 
@@ -218,7 +218,7 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
         }
 
         // Deduct withdrawal fees as needed
-        if (tx.origin != owner() && !paused()) {
+        if (!feeExempt[tx.origin] && tx.origin != owner() && !paused()) {
             // Fee to increase base value for remaining depositors
             uint256 withdrawalFeeAmount = wantBal.mul(withdrawalFee).div(
                 WITHDRAWAL_MAX
@@ -576,10 +576,15 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
             now
         );
 
-        uint256 burnAmount = IERC20(buyBackTokenAddress).balanceOf(address(this));
-        IERC20(buyBackTokenAddress).safeTransfer(BURN_ADDRESS, burnAmount);
+        uint256 buybackAmount = IERC20(buyBackTokenAddress).balanceOf(address(this));
 
-        emit BuyBackAndBurn(burnAmount);
+        if (burnEnabled) {
+            IERC20(buyBackTokenAddress).safeTransfer(BURN_ADDRESS, buybackAmount);
+        } else {
+            IERC20(buyBackTokenAddress).safeTransfer(protocolFeeRecipient, buybackAmount);
+        }
+
+        emit BuyBack(buyBackTokenAddress, buybackAmount);
     }
 
     /**
@@ -661,7 +666,7 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
     }
 
     /// @dev Option to set burn token to share token if wanted/needed at some point
-    function setBurnToken(
+    function setBuyBackToken(
         address _buyBackTokenAddress,
         address[] calldata _nativeToBuybackRoute
     ) external onlyManager {
