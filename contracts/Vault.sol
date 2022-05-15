@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-import "./interfaces/quartz/IStrategy.sol";
+import "./interfaces/IStrategy.sol";
 
 contract Vault is ERC20, Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
@@ -20,8 +20,10 @@ contract Vault is ERC20, Ownable, ReentrancyGuard {
 
     // The last proposed strategy to switch to.
     StratCandidate public stratCandidate;
+
     // The strategy currently in use by the vault.
     IStrategy public strategy;
+
     // The minimum time it has to pass before a strat candidate can be approved.
     uint256 public immutable approvalDelay;
 

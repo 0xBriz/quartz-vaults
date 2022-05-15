@@ -13,7 +13,7 @@ import "../common/StratManager.sol";
 import "../common/FeeManager.sol";
 import "../../utils/StringUtils.sol";
 
-contract StrategySharesLP is StratManager, FeeManager {
+contract AmesStrategyLP is StratManager, FeeManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -42,8 +42,8 @@ contract StrategySharesLP is StratManager, FeeManager {
     // Core LP pool for protocol
     address public protocolPairAddress;
 
-    // Address of token used in buyback and burns
-    address public burnTokenAddress;
+    // Address of token used in buyback
+    address public buyBackTokenAddress;
 
     // Token0 in protocol core LP pair
     address public protocolLpToken0;
@@ -99,7 +99,7 @@ contract StrategySharesLP is StratManager, FeeManager {
         address[] memory _protocolLp0Route,
         address[] memory _protocolLp1Route,
         address _protocolPairAddress,
-        address _burnTokenAddress,
+        address _buyBackTokenAddress,
         address[] memory _nativeToBuybackRoute
     )
         public
@@ -171,8 +171,8 @@ contract StrategySharesLP is StratManager, FeeManager {
         );
         protocolLp1Route = _protocolLp1Route;
 
-        require(_burnTokenAddress != address(0), "!_burnTokenAddress");
-        burnTokenAddress = _burnTokenAddress;
+        require(_buyBackTokenAddress != address(0), "!_buyBackTokenAddress");
+        buyBackTokenAddress = _buyBackTokenAddress;
 
         require(
             _nativeToBuybackRoute[0] == native,
@@ -180,8 +180,8 @@ contract StrategySharesLP is StratManager, FeeManager {
         );
         require(
             _nativeToBuybackRoute[_nativeToBuybackRoute.length - 1] ==
-                burnTokenAddress,
-            "_nativeToBuybackRoute[last] != burnTokenAddress"
+                buyBackTokenAddress,
+            "_nativeToBuybackRoute[last] != buyBackTokenAddress"
         );
         nativeToBuybackRoute = _nativeToBuybackRoute;
 
@@ -577,8 +577,8 @@ contract StrategySharesLP is StratManager, FeeManager {
             now
         );
 
-        uint256 burnAmount = IERC20(burnTokenAddress).balanceOf(address(this));
-        IERC20(burnTokenAddress).safeTransfer(BURN_ADDRESS, burnAmount);
+        uint256 burnAmount = IERC20(buyBackTokenAddress).balanceOf(address(this));
+        IERC20(buyBackTokenAddress).safeTransfer(BURN_ADDRESS, burnAmount);
 
         emit BuyBackAndBurn(burnAmount);
     }
@@ -663,21 +663,21 @@ contract StrategySharesLP is StratManager, FeeManager {
 
     /// @dev Option to set burn token to share token if wanted/needed at some point
     function setBurnToken(
-        address _burnTokenAddress,
+        address _buyBackTokenAddress,
         address[] calldata _nativeToBuybackRoute
     ) external onlyManager {
-        require(_burnTokenAddress != address(0), "!_burnTokenAddress");
+        require(_buyBackTokenAddress != address(0), "!_buyBackTokenAddress");
         require(
             _nativeToBuybackRoute[0] == native,
             "_nativeToBuybackRoute[0] != native"
         );
         require(
             _nativeToBuybackRoute[_nativeToBuybackRoute.length - 1] ==
-                _burnTokenAddress,
-            "_nativeToBuybackRoute[last] != burnTokenAddress"
+                _buyBackTokenAddress,
+            "_nativeToBuybackRoute[last] != buyBackTokenAddress"
         );
 
-        burnTokenAddress = _burnTokenAddress;
+        buyBackTokenAddress = _buyBackTokenAddress;
         nativeToBuybackRoute = _nativeToBuybackRoute;
     }
 }
