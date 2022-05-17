@@ -96,7 +96,7 @@ contract Vault is ERC20, Ownable, ReentrancyGuard {
      * @dev The entrypoint of funds into the system. People deposit with this function
      * into the vault. The vault is then in charge of sending funds into the strategy.
      */
-    function deposit(uint256 _amount) public nonReentrant {
+    function deposit(uint256 _amount) public nonReentrant {        
         // Allow any setup steps implemented in strategy to run first
         strategy.beforeDeposit();
 

@@ -24,6 +24,12 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+     hardhat: {
+      forking: {
+        url: process.env.BSC_ARCHIVE_NODE,
+        blockNumber: 17886082
+      }
+    },
     harmony_mainnet: {
       url: process.env.HARMONY_MAINNET_URL || "",
       accounts:
