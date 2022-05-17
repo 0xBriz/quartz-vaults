@@ -20,6 +20,8 @@ export const DEV_WALLET_ADDRESS_BSC =
 // Default deployment addresses
 export const DEFAULT_KEEPER_ADDRESS_BSC = DEV_WALLET_ADDRESS_BSC;
 
-export const DEFAULT_STRATEGIST_ADDRESS_BSC =
-  "0x2e86D29cFea7c4f422f7fCCF97986bbBa03e1a7F";
+// export const DEFAULT_STRATEGIST_ADDRESS_BSC =
+//   "0x2e86D29cFea7c4f422f7fCCF97986bbBa03e1a7F";
 
+export const DEFAULT_STRATEGIST_ADDRESS_BSC = 
+  '0x98d28Ba252284d12668c68d07c9D39249BF906c7' // New strategist dev address
