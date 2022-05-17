@@ -85,7 +85,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         uint256 _poolId,
         address _chef,
         address _vault,
-        address _unirouter,
+        address _router,
         address _keeper,
         address _strategist,
         address _protocolFeeRecipient,
@@ -101,7 +101,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         StratManager(
             _keeper,
             _strategist,
-            _unirouter,
+            _router,
             _vault,
             _protocolFeeRecipient
         )
@@ -261,7 +261,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
             .div(100);
 
         // Convert whatever the reward token is into the desired output token for rewards
-        IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+        IUniswapRouterETH(router).swapExactTokensForTokens(
             rewardTokenBalance,
             0,
             outputToNativeRoute,
@@ -298,7 +298,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
     function swapRewards() internal {
         if (want != output) {
             uint256 outputBal = IERC20(output).balanceOf(address(this));
-            IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+            IUniswapRouterETH(router).swapExactTokensForTokens(
                 outputBal,
                 0,
                 outputToWantRoute,
@@ -349,7 +349,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         uint256 nativeOut;
         if (outputBal > 0) {
             try
-                IUniswapRouterETH(unirouter).getAmountsOut(
+                IUniswapRouterETH(router).getAmountsOut(
                     outputBal,
                     outputToNativeRoute
                 )
@@ -403,34 +403,34 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
 
     function _giveAllowances() internal {
         IERC20(want).safeApprove(chef, uint256(-1));
-        IERC20(output).safeApprove(unirouter, uint256(-1));
+        IERC20(output).safeApprove(router, uint256(-1));
 
         // Protocol token approvals
-        IERC20(protocolLpToken0).safeApprove(unirouter, 0);
-        IERC20(protocolLpToken0).safeApprove(unirouter, uint256(-1));
+        IERC20(protocolLpToken0).safeApprove(router, 0);
+        IERC20(protocolLpToken0).safeApprove(router, uint256(-1));
 
-        IERC20(protocolLpToken1).safeApprove(unirouter, 0);
-        IERC20(protocolLpToken1).safeApprove(unirouter, uint256(-1));
+        IERC20(protocolLpToken1).safeApprove(router, 0);
+        IERC20(protocolLpToken1).safeApprove(router, uint256(-1));
 
         // Need to approve the pair to access contracts protocol LP pair tokens
         IERC20(protocolLpToken0).safeApprove(protocolPairAddress, uint256(-1));
         IERC20(protocolLpToken1).safeApprove(protocolPairAddress, uint256(-1));
 
-        IERC20(native).safeApprove(unirouter, 0);
-        IERC20(native).safeApprove(unirouter, uint256(-1));
+        IERC20(native).safeApprove(router, 0);
+        IERC20(native).safeApprove(router, uint256(-1));
 
-        IERC20(protocolPairAddress).safeApprove(unirouter, 0);
-        IERC20(protocolPairAddress).safeApprove(unirouter, uint256(-1));
+        IERC20(protocolPairAddress).safeApprove(router, 0);
+        IERC20(protocolPairAddress).safeApprove(router, uint256(-1));
     }
 
     function _removeAllowances() internal {
         IERC20(want).safeApprove(chef, 0);
-        IERC20(output).safeApprove(unirouter, 0);
+        IERC20(output).safeApprove(router, 0);
 
-        IERC20(protocolLpToken0).safeApprove(unirouter, 0);
-        IERC20(protocolLpToken1).safeApprove(unirouter, 0);
-        IERC20(protocolPairAddress).safeApprove(unirouter, 0);
-        IERC20(native).safeApprove(unirouter, 0);
+        IERC20(protocolLpToken0).safeApprove(router, 0);
+        IERC20(protocolLpToken1).safeApprove(router, 0);
+        IERC20(protocolPairAddress).safeApprove(router, 0);
+        IERC20(native).safeApprove(router, 0);
     }
 
     function outputToNative() external view returns (address[] memory) {
@@ -459,7 +459,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
 
     /// @dev Takes some of amount of rewards and swaps to and burns the burn token
     function _doBuybackAndBurn(uint256 _amountNativeIn) private {
-        IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+        IUniswapRouterETH(router).swapExactTokensForTokens(
             _amountNativeIn,
             0,
             nativeToBuybackRoute,
@@ -482,7 +482,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         uint256 nativeHalf = _amountNativeToSlpit.div(2);
 
         if (protocolLpToken0 != native) {
-            IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+            IUniswapRouterETH(router).swapExactTokensForTokens(
                 nativeHalf,
                 0,
                 protocolLp0Route,
@@ -492,7 +492,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         }
 
         if (protocolLpToken1 != native) {
-            IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+            IUniswapRouterETH(router).swapExactTokensForTokens(
                 nativeHalf,
                 0,
                 protocolLp1Route,
@@ -509,7 +509,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
             uint256 amountA,
             uint256 amountB,
             uint256 liquidity
-        ) = IUniswapRouterETH(unirouter).addLiquidity(
+        ) = IUniswapRouterETH(router).addLiquidity(
                 protocolLpToken0,
                 protocolLpToken1,
                 lpBal0,

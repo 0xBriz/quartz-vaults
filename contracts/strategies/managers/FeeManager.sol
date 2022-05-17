@@ -17,10 +17,10 @@ abstract contract FeeManager is StratManager {
 
     uint256 public constant WITHDRAWAL_MAX = 10000;
 
-        // Cap on burn fee for transparency
+    // Cap on burn fee for transparency
     uint256 public constant MAX_BUYBACK_FEE = 50;
 
-        // Cap on protocolWithdrawalFee 
+    // Cap on protocolWithdrawalFee 
     uint256 public constant PROTOCOL_WITHDRAWAL_FEE_CAP = 100;
 
     // Reward for person who creates and deploys the strategy

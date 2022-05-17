@@ -58,7 +58,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         uint256 _poolId,
         address _chef,
         address _vault,
-        address _unirouter,
+        address _router,
         address _keeper,
         address _strategist,
         address _protocolFeeRecipient,
@@ -70,7 +70,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         StratManager(
             _keeper,
             _strategist,
-            _unirouter,
+            _router,
             _vault,
             _protocolFeeRecipient
         )
@@ -191,7 +191,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         );
 
         // Convert whatever the reward token is into the current chains native token
-        IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+        IUniswapRouterETH(router).swapExactTokensForTokens(
             toNative,
             0,
             outputToNativeRoute,
@@ -216,7 +216,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         uint256 outputHalf = IERC20(output).balanceOf(address(this)).div(2);
 
         if (lpToken0 != output) {
-            IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+            IUniswapRouterETH(router).swapExactTokensForTokens(
                 outputHalf,
                 0,
                 outputToLp0Route,
@@ -226,7 +226,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         }
 
         if (lpToken1 != output) {
-            IUniswapRouterETH(unirouter).swapExactTokensForTokens(
+            IUniswapRouterETH(router).swapExactTokensForTokens(
                 outputHalf,
                 0,
                 outputToLp1Route,
@@ -237,7 +237,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
 
         uint256 lp0Bal = IERC20(lpToken0).balanceOf(address(this));
         uint256 lp1Bal = IERC20(lpToken1).balanceOf(address(this));
-        IUniswapRouterETH(unirouter).addLiquidity(
+        IUniswapRouterETH(router).addLiquidity(
             lpToken0,
             lpToken1,
             lp0Bal,
@@ -290,7 +290,7 @@ contract StrategyAmesLP is StratManager, FeeManager {
         uint256 nativeOut;
         if (outputBal > 0) {
             try
-                IUniswapRouterETH(unirouter).getAmountsOut(
+                IUniswapRouterETH(router).getAmountsOut(
                     outputBal,
                     outputToNativeRoute
                 )
@@ -345,20 +345,20 @@ contract StrategyAmesLP is StratManager, FeeManager {
 
     function _giveAllowances() internal {
         IERC20(want).safeApprove(chef, uint256(-1));
-        IERC20(output).safeApprove(unirouter, uint256(-1));
+        IERC20(output).safeApprove(router, uint256(-1));
 
-        IERC20(lpToken0).safeApprove(unirouter, 0);
-        IERC20(lpToken0).safeApprove(unirouter, uint256(-1));
+        IERC20(lpToken0).safeApprove(router, 0);
+        IERC20(lpToken0).safeApprove(router, uint256(-1));
 
-        IERC20(lpToken1).safeApprove(unirouter, 0);
-        IERC20(lpToken1).safeApprove(unirouter, uint256(-1));
+        IERC20(lpToken1).safeApprove(router, 0);
+        IERC20(lpToken1).safeApprove(router, uint256(-1));
     }
 
     function _removeAllowances() internal {
         IERC20(want).safeApprove(chef, 0);
-        IERC20(output).safeApprove(unirouter, 0);
-        IERC20(lpToken0).safeApprove(unirouter, 0);
-        IERC20(lpToken1).safeApprove(unirouter, 0);
+        IERC20(output).safeApprove(router, 0);
+        IERC20(lpToken0).safeApprove(router, 0);
+        IERC20(lpToken1).safeApprove(router, 0);
     }
 
     function outputToNative() external view returns (address[] memory) {

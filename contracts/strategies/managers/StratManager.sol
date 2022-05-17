@@ -10,11 +10,11 @@ contract StratManager is Ownable, Pausable {
      * {keeper} - Address to manage a few lower risk features of the strat
      * {strategist} - Address of the strategy author/deployer where strategist fee will go.
      * {vault} - Address of the vault that controls the strategy's funds.
-     * {unirouter} - Address of exchange to execute swaps.
+     * {router} - Address of exchange to execute swaps.
      */
     address public keeper;
     address public strategist;
-    address public unirouter;
+    address public router;
     address public vault;
     address public protocolFeeRecipient;
 
@@ -22,20 +22,20 @@ contract StratManager is Ownable, Pausable {
      * @dev Initializes the base strategy.
      * @param _keeper address to use as alternative owner.
      * @param _strategist address where strategist fees go.
-     * @param _unirouter router to use for swaps
+     * @param _router router to use for swaps
      * @param _vault address of parent vault.
      * @param _protocolFeeRecipient address where to send Protocol's fees.
      */
     constructor(
         address _keeper,
         address _strategist,
-        address _unirouter,
+        address _router,
         address _vault,
         address _protocolFeeRecipient
     ) public {
         keeper = _keeper;
         strategist = _strategist;
-        unirouter = _unirouter;
+        router = _router;
         vault = _vault;
         protocolFeeRecipient = _protocolFeeRecipient;
     }
@@ -65,10 +65,10 @@ contract StratManager is Ownable, Pausable {
 
     /**
      * @dev Updates router that will be used for swaps.
-     * @param _unirouter new unirouter address.
+     * @param _router new router address.
      */
-    function setUnirouter(address _unirouter) external onlyOwner {
-        unirouter = _unirouter;
+    function setRouter(address _router) external onlyOwner {
+        router = _router;
     }
 
     /**
