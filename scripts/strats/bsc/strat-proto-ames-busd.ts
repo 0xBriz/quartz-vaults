@@ -15,14 +15,14 @@ const _outputToNativeRoute: string[] = [
   TOKENS.BUSD.BSC,
 ];
 
-// Token0: BUSD
+// Token0: AMES
 const _outputToLp0Route: string[] = [TOKENS.ASHARE.BSC,TOKENS.BUSD.BSC, TOKENS.AMETHYST.BSC] ;
 
-// Token1: AMES
+// Token1: BUSD
 const _outputToLp1Route: string[] = [TOKENS.ASHARE.BSC, TOKENS.BUSD.BSC];
 
-export const nameToken0 = "BUSD";
-export const nameToken1 = "AMETHYST";
+export const nameToken0 = "AMETHYST";
+export const nameToken1 = "BUSD";
 
   // address _want,
   // uint256 _poolId,
@@ -42,7 +42,7 @@ export const nameToken1 = "AMETHYST";
   // address[] _nativeToBuybackRoute
 export const constructorArgs: AmesProtocolStrategyLPConfig = {
   want: PAIR_AMETHYST_BUSD_ADDRESS,
-  poolId: 0,
+  poolId: 9,
   chefAddress: REWARD_POOL_ADDRESS_BSC,
   vault: null,
   router: PANCAKESWAP_ROUTER_ADDRESS,

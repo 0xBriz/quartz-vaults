@@ -10,7 +10,7 @@ abstract contract FeeManager is StratManager {
       // Cap on amount of call fee reward
     uint256 public constant MAX_CALL_FEE = 200;
 
-     uint256 public constant MAX_STRATEGIST_FEE = 500;
+    uint256 public constant MAX_STRATEGIST_FEE = 500;
 
     // Cap on fee taken to increase value for remaining depositors
     uint256 public constant WITHDRAWAL_FEE_CAP = 50;
@@ -36,7 +36,7 @@ abstract contract FeeManager is StratManager {
 
     // Used to add to Protocol Owned Liquidity.
     // 1% default
-    uint256 public protocolWithdrawalFee = 10;
+    uint256 public protocolWithdrawalFee = 20;
 
     // Fee taken when a user withdraws to increase base value for remaining depositors
     uint256 public withdrawalFee = 10;
