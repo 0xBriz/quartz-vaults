@@ -1,4 +1,4 @@
-import { AmesProtocolStrategyLPConfig } from "../../../utils/deploy-util";
+import { AmesProtocolStrategyLPConfig } from "../../../utils/types";
 import { TOKENS } from "../../data/tokens";
 import {
   TREASURY_ADDRESS_BSC,

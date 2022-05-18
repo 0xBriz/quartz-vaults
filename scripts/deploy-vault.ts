@@ -1,5 +1,5 @@
 import { predictAddresses } from "../utils/predictAddresses";
-import { deployCommonVault, deployStrategySharesLP } from "../utils/deploy-util";
+import { deployCommonVault, deployAmesProtocolStrategy } from "../utils/deploy-util";
 import { STRAT_PROTO_AMETHYST_BUSD_BSC } from "./strats/bsc/strat-proto-ames-busd";
 import { STRAT_AHARE_BUSD_BSC } from "./strats/bsc/strat-ashare-busd";
 
@@ -18,7 +18,7 @@ async function main() {
   currentStrat.constructorArgs.vault = vault.address;
 
   // Update rewards check function name to match our reward pool/chef name
-  const strategy = await deployStrategySharesLP(currentStrat.constructorArgs);
+  const strategy = await deployAmesProtocolStrategy(currentStrat.constructorArgs);
 
   const tx = await strategy.setPendingRewardsFunctionName("pendingShare");
   await tx.wait(1);

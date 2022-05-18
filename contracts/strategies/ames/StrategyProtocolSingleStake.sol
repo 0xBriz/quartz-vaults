@@ -60,6 +60,8 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
     address public constant BURN_ADDRESS =
         0x000000000000000000000000000000000000dEaD;
 
+    // ============== EVENTS =============== //
+
     event ProtocolLiquidity(
         uint256 indexed amountA,
         uint256 indexed amountB,
@@ -69,8 +71,6 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
     event TreasuryFeeTransfer(uint256 indexed amount);
 
     event BuyBackAndBurn(uint256 indexed amount);
-
-    // ============== EVENTS =============== //
 
     event StratHarvest(
         address indexed harvester,
@@ -89,12 +89,12 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         address _keeper,
         address _strategist,
         address _protocolFeeRecipient,
+        address _protocolPairAddress,
+        address _burnTokenAddress,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToWantRoute,
         address[] memory _protocolLp0Route,
         address[] memory _protocolLp1Route,
-        address _protocolPairAddress,
-        address _burnTokenAddress,
         address[] memory _nativeToBuybackRoute
     )
         public

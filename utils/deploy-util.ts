@@ -1,119 +1,13 @@
 import { BigNumberish } from "ethers";
 import { ethers } from "hardhat";
 import { predictAddresses } from "./predictAddresses";
+import { AmesProtocolStrategyLPConfig, StratProtocolSingleStakeConfig } from "./types";
 
-export interface VaultDeployConfig {
-  tokenName: string;
-  tokenSymbol: string;
-  approvalDelay: number;
-  vaultName: string;
-  strategyName: string;
-  stratArgs: any[];
-}
 
-export interface StratCommonDeployConfig {
-  want: string;
-  poolId: number;
-  chefAddress: string;
-  vault: string;
-  router: string;
-  keeper: string;
-  strategist: string;
-  protocolFeeRecipient: string;
-  _outputToNativeRoute: string[];
-  _outputToLp0Route: string[];
-  _outputToLp1Route: string[];
-}
-
-export interface StratProtocolBase {
- _protocolPairAddress: string;
-  _buybackTokenAddress: string;
-  _protocolLp0Route: string[];
-  _protocolLp1Route: string[];
-  _nativeToBuybackRoute: string[];
-}
-
-  //  address _want,
-  // uint256 _poolId,
-  // address _chef,
-  // address _vault,
-  // address _unirouter,
-  // address _keeper,
-  // address _strategist,
-  // address _protocolFeeRecipient,
-  // address _protocolPairAddress,
-  // address _buyBackTokenAddress,
-  // address[] memory _outputToNativeRoute,
-  // address[] memory _outputToLp0Route,
-  // address[] memory _outputToLp1Route,
-  // address[] memory _protocolLp0Route,
-  // address[] memory _protocolLp1Route,
-  // address[] memory _nativeToBuybackRoute
-export interface AmesProtocolStrategyLPConfig {
-  want: string;
-  poolId: number;
-  chefAddress: string;
-  vault: string;
-  router: string;
-  keeper: string;
-  strategist: string;
-  protocolFeeRecipient: string;
-  _protocolPairAddress: string;
-  _buybackTokenAddress: string;
-  _outputToNativeRoute: string[];
-  _outputToLp0Route: string[];
-  _outputToLp1Route: string[];
-  _protocolLp0Route: string[];
-  _protocolLp1Route: string[];
-  _nativeToBuybackRoute: string[];
-}
-
-export interface StratSingleStakeConfig {
-  want: string;
-  poolId: number;
-  chefAddress: string;
-  vault: string;
-  router: string;
-  keeper: string;
-  strategist: string;
-  protocolFeeRecipient: string;
-  _outputToNativeRoute: string[];
-  _outputToWant: string[];
-}
-
-export interface StratProtocolSingleStakeConfig extends StratProtocolBase {
-  want: string;
-  poolId: number;
-  chefAddress: string;
-  vault: string;
-  router: string;
-  keeper: string;
-  strategist: string;
-  protocolFeeRecipient: string;
-  _outputToNativeRoute: string[];
-  _outputToWant: string[];
-}
-
-export const deployStrategySharesLP = async (
+export const deployAmesProtocolStrategy = async (
   stratArgs: AmesProtocolStrategyLPConfig
 ) => {
   const AmesProtocolStrategyLP = await ethers.getContractFactory("AmesProtocolStrategyLP");
-  // address _want,
-  // uint256 _poolId,
-  // address _chef,
-  // address _vault,
-  // address _unirouter,
-  // address _keeper,
-  // address _strategist,
-  // address _protocolFeeRecipient,
-  // address _protocolPairAddress,
-  // address _burnTokenAddress,
-  // address[] memory _outputToNativeRoute,
-  // address[] memory _outputToLp0Route,
-  // address[] memory _outputToLp1Route,
-  // address[] memory _protocolLp0Route,
-  // address[] memory _protocolLp1Route,
-  // address[] _nativeToBuybackRoute
   const strategy = await AmesProtocolStrategyLP.deploy(
     stratArgs.want,
     stratArgs.poolId,
@@ -138,8 +32,6 @@ export const deployStrategySharesLP = async (
   return strategy;
 };
 
-
-
 export const deployCommonVault = async (
   ownerAddress: string,
   strategyAddress: string,
@@ -163,40 +55,6 @@ export const deployCommonVault = async (
   );
   await vault.deployed();
   console.log("Vault deployed to:", vault.address);
-  console.log(
-    `predicted: ${predictedAddresses.vault} - actual: ${vault.address}`
-  );
-
-  return vault;
-};
-
-export const deploySharesLpVault = async (
-  ownerAddress: string,
-  strategyAddress: string,
-  nameToken0: string,
-  nameToken1: string,
-  depositLimit: BigNumberish,
-  userLimit: BigNumberish
-) => {
-  const predictedAddresses = await predictAddresses(ownerAddress);
-
-  const Vault = await ethers.getContractFactory("SharesVault");
-  const vaultArgs = {
-    strategyAddress,
-    tokenName: `AMES ${nameToken0}-${nameToken1} Vault LP`,
-    tokenSymbol: `ames${nameToken0}-${nameToken1}-VLP`,
-    approvalDelay: 10,
-  };
-  const vault = await Vault.deploy(
-    vaultArgs.strategyAddress,
-    vaultArgs.tokenName,
-    vaultArgs.tokenSymbol,
-    vaultArgs.approvalDelay,
-    depositLimit,
-    userLimit
-  );
-  await vault.deployed();
-  console.log("SharesVault deployed to:", vault.address);
   console.log(
     `predicted: ${predictedAddresses.vault} - actual: ${vault.address}`
   );
@@ -234,71 +92,6 @@ export const deploySingleStakeVault = async (
   return vault;
 };
 
-export const deployStrategyCommon = async (
-  stratArgs: StratCommonDeployConfig
-) => {
-  const Strategy = await ethers.getContractFactory("StrategyQuartzLP");
-  //   address _want,
-  //   uint256 _poolId,
-  //   address _chef,
-  //   address _vault,
-  //   address _unirouter,
-  //   address _keeper,
-  //   address _strategist,
-  //   address _protocolFeeRecipient,
-  //   address[] memory _outputToNativeRoute,
-  //   address[] memory _outputToLp0Route,
-  const strategy = await Strategy.deploy(
-    stratArgs.want,
-    stratArgs.poolId,
-    stratArgs.chefAddress,
-    stratArgs.vault,
-    stratArgs.router,
-    stratArgs.keeper,
-    stratArgs.strategist,
-    stratArgs.protocolFeeRecipient,
-    stratArgs._outputToNativeRoute,
-    stratArgs._outputToLp0Route,
-    stratArgs._outputToLp1Route
-  );
-
-  await strategy.deployed();
-  console.log("StrategyQuartzLP deployed to:", strategy.address);
-  return strategy;
-};
-
-export const deployStrategySingleStake = async (
-  stratArgs: StratSingleStakeConfig
-) => {
-  const Strategy = await ethers.getContractFactory("StrategyQuartzSingleStake");
-  // address _want,
-  // uint256 _poolId,
-  // address _chef,
-  // address _vault,
-  // address _unirouter,
-  // address _keeper,
-  // address _strategist,
-  // address _protocolFeeRecipient,
-  // address[] memory _outputToNativeRoute,
-  // address[] memory _outputToWantRoute
-  const strategy = await Strategy.deploy(
-    stratArgs.want,
-    stratArgs.poolId,
-    stratArgs.chefAddress,
-    stratArgs.vault,
-    stratArgs.router,
-    stratArgs.keeper,
-    stratArgs.strategist,
-    stratArgs.protocolFeeRecipient,
-    stratArgs._outputToNativeRoute,
-    stratArgs._outputToWant
-  );
-
-  await strategy.deployed();
-  console.log("StrategyQuartzSingleStake deployed to:", strategy.address);
-  return strategy;
-};
-
 export const deployProtocolStrategySingleStake = async (
   stratArgs: StratProtocolSingleStakeConfig
 ) => {
@@ -311,12 +104,12 @@ export const deployProtocolStrategySingleStake = async (
   // address _keeper,
   // address _strategist,
   // address _protocolFeeRecipient,
-  // address[] memory _outputToNativeRoute,
-  // address[] memory _outputToWantRoute
-   // address[] memory _protocolLp0Route,
-  // address[] memory _protocolLp1Route,
   // address _protocolPairAddress,
   // address _burnTokenAddress,
+  // address[] memory _outputToNativeRoute,
+  // address[] memory _outputToWantRoute
+  // address[] memory _protocolLp0Route,
+  // address[] memory _protocolLp1Route,
   // address[] _nativeToBuybackRoute
   const strategy = await Strategy.deploy(
     stratArgs.want,
@@ -327,12 +120,12 @@ export const deployProtocolStrategySingleStake = async (
     stratArgs.keeper,
     stratArgs.strategist,
     stratArgs.protocolFeeRecipient,
+    stratArgs._protocolPairAddress,
+    stratArgs._buybackTokenAddress,
     stratArgs._outputToNativeRoute,
     stratArgs._outputToWant,
     stratArgs._protocolLp0Route,
     stratArgs._protocolLp1Route,
-    stratArgs._protocolPairAddress,
-    stratArgs._buybackTokenAddress,
     stratArgs._nativeToBuybackRoute
   );
 
