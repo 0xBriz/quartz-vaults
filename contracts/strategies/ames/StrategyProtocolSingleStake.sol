@@ -402,7 +402,10 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
     }
 
     function _giveAllowances() internal {
+        IERC20(want).safeApprove(chef, 0);
         IERC20(want).safeApprove(chef, uint256(-1));
+
+        IERC20(output).safeApprove(router, 0);
         IERC20(output).safeApprove(router, uint256(-1));
 
         // Protocol token approvals
@@ -413,7 +416,13 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         IERC20(protocolLpToken1).safeApprove(router, uint256(-1));
 
         // Need to approve the pair to access contracts protocol LP pair tokens
+        IERC20(protocolLpToken0).safeApprove(protocolPairAddress, 0);
         IERC20(protocolLpToken0).safeApprove(protocolPairAddress, uint256(-1));
+
+        IERC20(protocolLpToken0).safeApprove(protocolPairAddress, 0);
+        IERC20(protocolLpToken0).safeApprove(protocolPairAddress, uint256(-1));
+
+        IERC20(protocolLpToken1).safeApprove(protocolPairAddress, 0);
         IERC20(protocolLpToken1).safeApprove(protocolPairAddress, uint256(-1));
 
         IERC20(native).safeApprove(router, 0);
