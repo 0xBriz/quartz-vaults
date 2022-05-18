@@ -1,9 +1,10 @@
 import { predictAddresses } from "../utils/predictAddresses";
 import { deployCommonVault, deployStrategySharesLP } from "../utils/deploy-util";
 import { STRAT_PROTO_AMETHYST_BUSD_BSC } from "./strats/bsc/strat-proto-ames-busd";
+import { STRAT_AHARE_BUSD_BSC } from "./strats/bsc/strat-ashare-busd";
 
 async function main() {
-  const currentStrat = STRAT_PROTO_AMETHYST_BUSD_BSC;
+  const currentStrat = STRAT_AHARE_BUSD_BSC;
   const owner = '0x570108E54d11348BD3734FF73dc55eC52c28d3EF';
   const predictedAddresses = await predictAddresses(owner);
 

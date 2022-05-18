@@ -59,6 +59,7 @@ contract StratManager is Ownable, Pausable {
      * @param _strategist new strategist address.
      */
     function setStrategist(address _strategist) external {
+        require(_strategist != address(0), "!strategist");
         require(msg.sender == strategist, "!strategist");
         strategist = _strategist;
     }
