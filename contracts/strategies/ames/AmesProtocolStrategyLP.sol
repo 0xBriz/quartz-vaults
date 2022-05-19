@@ -487,8 +487,14 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
     }
 
     function _giveAllowances() internal {
+        IERC20(want).safeApprove(chef, 0);
         IERC20(want).safeApprove(chef, uint256(-1));
+
+        IERC20(output).safeApprove(router, 0);
         IERC20(output).safeApprove(router, uint256(-1));
+
+        IERC20(native).safeApprove(router, 0);
+        IERC20(native).safeApprove(router, uint256(-1))
 
         IERC20(lpToken0).safeApprove(router, 0);
         IERC20(lpToken0).safeApprove(router, uint256(-1));
@@ -503,12 +509,11 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
         IERC20(protocolLpToken1).safeApprove(router, 0);
         IERC20(protocolLpToken1).safeApprove(router, uint256(-1));
 
-        // Need to approve the pair to access contracts protocol LP pair tokens
+        IERC20(protocolLpToken0).safeApprove(protocolPairAddress, 0);
         IERC20(protocolLpToken0).safeApprove(protocolPairAddress, uint256(-1));
-        IERC20(protocolLpToken1).safeApprove(protocolPairAddress, uint256(-1));
 
-        IERC20(native).safeApprove(router, 0);
-        IERC20(native).safeApprove(router, uint256(-1));
+        IERC20(protocolLpToken1).safeApprove(protocolPairAddress, 0);
+        IERC20(protocolLpToken1).safeApprove(protocolPairAddress, uint256(-1));
 
         IERC20(protocolPairAddress).safeApprove(router, 0);
         IERC20(protocolPairAddress).safeApprove(router, uint256(-1));
@@ -517,13 +522,15 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
     function _removeAllowances() internal {
         IERC20(want).safeApprove(chef, 0);
         IERC20(output).safeApprove(router, 0);
+        IERC20(native).safeApprove(router, 0);
         IERC20(lpToken0).safeApprove(router, 0);
         IERC20(lpToken1).safeApprove(router, 0);
 
         IERC20(protocolLpToken0).safeApprove(router, 0);
         IERC20(protocolLpToken1).safeApprove(router, 0);
+        IERC20(protocolLpToken0).safeApprove(protocolPairAddress, 0);
+        IERC20(protocolLpToken1).safeApprove(protocolPairAddress, 0);
         IERC20(protocolPairAddress).safeApprove(router, 0);
-        IERC20(native).safeApprove(router, 0);
     }
 
     function outputToNative() external view returns (address[] memory) {
