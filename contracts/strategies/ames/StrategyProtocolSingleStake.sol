@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12; 
+pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -409,13 +409,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         IERC20(output).safeApprove(router, uint256(-1));
 
         IERC20(native).safeApprove(router, 0);
-        IERC20(native).safeApprove(router, uint256(-1))
-
-        IERC20(lpToken0).safeApprove(router, 0);
-        IERC20(lpToken0).safeApprove(router, uint256(-1));
-
-        IERC20(lpToken1).safeApprove(router, 0);
-        IERC20(lpToken1).safeApprove(router, uint256(-1));
+        IERC20(native).safeApprove(router, uint256(-1));
 
         // Protocol token approvals
         IERC20(protocolLpToken0).safeApprove(router, 0);
@@ -438,8 +432,6 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         IERC20(want).safeApprove(chef, 0);
         IERC20(output).safeApprove(router, 0);
         IERC20(native).safeApprove(router, 0);
-        IERC20(lpToken0).safeApprove(router, 0);
-        IERC20(lpToken1).safeApprove(router, 0);
 
         IERC20(protocolLpToken0).safeApprove(router, 0);
         IERC20(protocolLpToken1).safeApprove(router, 0);
@@ -447,7 +439,7 @@ contract StrategyProtocolSingleStake is StratManager, FeeManager {
         IERC20(protocolLpToken1).safeApprove(protocolPairAddress, 0);
         IERC20(protocolPairAddress).safeApprove(router, 0);
     }
-    
+
     function outputToNative() external view returns (address[] memory) {
         return outputToNativeRoute;
     }

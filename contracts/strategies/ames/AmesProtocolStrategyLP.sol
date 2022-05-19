@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12; 
+pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -494,7 +494,7 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
         IERC20(output).safeApprove(router, uint256(-1));
 
         IERC20(native).safeApprove(router, 0);
-        IERC20(native).safeApprove(router, uint256(-1))
+        IERC20(native).safeApprove(router, uint256(-1));
 
         IERC20(lpToken0).safeApprove(router, 0);
         IERC20(lpToken0).safeApprove(router, uint256(-1));
@@ -580,12 +580,20 @@ contract AmesProtocolStrategyLP is StratManager, FeeManager {
             now
         );
 
-        uint256 buybackAmount = IERC20(buyBackTokenAddress).balanceOf(address(this));
+        uint256 buybackAmount = IERC20(buyBackTokenAddress).balanceOf(
+            address(this)
+        );
 
         if (burnEnabled) {
-            IERC20(buyBackTokenAddress).safeTransfer(BURN_ADDRESS, buybackAmount);
+            IERC20(buyBackTokenAddress).safeTransfer(
+                BURN_ADDRESS,
+                buybackAmount
+            );
         } else {
-            IERC20(buyBackTokenAddress).safeTransfer(protocolFeeRecipient, buybackAmount);
+            IERC20(buyBackTokenAddress).safeTransfer(
+                protocolFeeRecipient,
+                buybackAmount
+            );
         }
 
         emit BuyBack(buyBackTokenAddress, buybackAmount);
